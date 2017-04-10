@@ -1,4 +1,4 @@
 #!/bin/sh
 
 data/update
-python2 bin/update.py
+python bin/update.py
