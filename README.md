@@ -1,7 +1,8 @@
 
-# dowsDNS
+# DomainSeeker
 
-快速翻越中国防火墙
+快速翻墙，仅供学习使用。
+注：严禁用于商业及任何违法用途。
 
 # 使用方法
 
@@ -9,7 +10,7 @@
 
 ## Linux/Mac
 
-1. cd dowsDNS/data
+1. cd DomainSeeker/data
 2. make
 3. cd ..
 4. sudo ./start.sh 
@@ -20,8 +21,8 @@
 
 ## Windows
 
-* 下载 dowsDNS.zip，解压
-* 下载地址：https://github.com/harrisonpan/dowsDNS/releases/latest/
+* 下载 DomainSeeker.zip，解压
+* 下载地址：https://github.com/harrisonpan/DomainSeeker/releases/latest/
 * 右键管理员身份运行 start.bat或update.bat(更新hosts)
 
 
