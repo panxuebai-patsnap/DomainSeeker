@@ -1,1 +1,2 @@
 *.pyc
+/bin/dnslib/__pycache__/*
