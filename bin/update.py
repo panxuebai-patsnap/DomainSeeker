@@ -1,60 +1,62 @@
 # -*- coding:utf-8 -*-
-import  urllib2
+import urllib2
 import json
-import base64
-def  Get_host(url):
-	list1 = []
-	list2 = []
-	data = urllib2.urlopen(url) .read()
-	with open("./data/tmp",'w') as f:
-		f.write(data)
-	with open("./data/tmp",'r') as f:
-		for line in f:
-			if len(line)>4 and line[0:1] != '#' and '\n' and '\r' and '\r\n':
-				linedata  = (' '.join(line.split())).split(' ')
-				list1.append(linedata[1])
-				list2.append(linedata[0])
-	dict_data =   dict(zip(list1,list2))
-	return  dict_data
 
-def Update_record(data):
-	print ("Starting   [ 1 ]  updating...")
 
-	with open("./data/rpz.json",'w') as f:
-		json.dump(data, f)
-		print ("success!   [ 1 ]  have done ! ")
-def GetWildcardsrcd(url):
-	print ("Starting   [ 2 ]  updating...")
-	data = urllib2.urlopen(url) .read()
-	with open("./data/wrcd.json",'w') as f:
-		f.write(data)
-	print ("success!   [ 2 ]  have done ! ")
+# get hosts from remote url and wrap the data into dict
+def getHosts(url):
+    print("fetching from:" + url)
+    ips = []
+    domains = []
+    data = urllib2.urlopen(url).read()
+    with open("./data/tmp", 'w') as f:
+        f.write(data)
+    with open("./data/tmp", 'r') as f:
+        for line in f:
+            if len(line) > 4 and line[0:1] != '#' and '\n' and '\r' and '\r\n':
+                record = (' '.join(line.split())).split(' ')
+                ips.append(record[1])
+                domains.append(record[0])
+    hosts = dict(zip(ips, domains))
+    return hosts
+
+
+# save dict into local file
+def updateLocalHosts(data):
+    print("starting [save hosts]...")
+
+    with open("./data/rpz.json", 'w') as f:
+        json.dump(data, f)
+    print("success! [save hosts] have done ! ")
+
+
+# update wildcardsrcd from remote url
+def getWildcardsrcd(url):
+    print("starting [fetch wrcd]...")
+    data = urllib2.urlopen(url).read()
+    with open("./data/wrcd.json", 'w') as f:
+        f.write(data)
+    print("success! [fetch wrcd] have done ! ")
+
 
 def main():
-	with open ("./conf/hosts_repository_config.json",'r') as d:
-		dict_config = json.load(d)
-	dict_host={}
+    with open("./conf/hosts_repository_config.json", 'r') as d:
+        repoConfig = json.load(d)
+    allHosts = {}
 
-	for key1 in dict_config:
-		if key1 == "hosts":
-			for key2 in dict_config[key1]:
-				url = dict_config[key1][key2]
-				dict1 = Get_host(url)
-				dict_host.update(dict1)
-		elif key1 == "wrcd":
-			pass
-		else:
-			print("Sorry,%s is not support"%key1)
-
-	url = dict_config['wrcd']
-	Update_record(dict_host)
-	GetWildcardsrcd(url)
+    for type in repoConfig:
+        if type == "hosts":
+            for url in repoConfig[type].values():
+                hosts = getHosts(url)
+                allHosts.update(hosts)
+        elif type == "wrcd":
+            getWildcardsrcd(repoConfig[type])
+    updateLocalHosts(allHosts)
+    print("Congratulations! All updates completed.")
 
 
 if __name__ == '__main__':
-	try:
-		main()
-		#Update_record()
-		#GetWildcardsrcd()
-	except Exception as e:
-		raise e
+    try:
+        main()
+    except Exception as e:
+        raise e
