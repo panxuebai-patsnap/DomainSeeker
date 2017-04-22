@@ -4,7 +4,7 @@ import json
 
 
 # get hosts from remote url and wrap the data into dict
-def getHosts(url):
+def fetchHosts(url):
     print("fetching from:" + url)
     ips = []
     domains = []
@@ -22,36 +22,36 @@ def getHosts(url):
 
 
 # save dict into local file
-def updateLocalHosts(data):
+def saveHosts(hosts):
     print("starting [save hosts]...")
 
     with open("./data/rpz.json", 'w') as f:
-        json.dump(data, f)
+        json.dump(hosts, f)
     print("success! [save hosts] have done ! ")
 
 
-# update wildcardsrcd from remote url
-def getWildcardsrcd(url):
-    print("starting [fetch wrcd]...")
+# update wildcards from remote url
+def fetchAndSaveWildcards(url):
+    print("starting [fetch wildcards]...")
     data = urllib2.urlopen(url).read()
-    with open("./data/wrcd.json", 'w') as f:
+    with open("./data/wildcards.json", 'w') as f:
         f.write(data)
-    print("success! [fetch wrcd] have done ! ")
+    print("success! [fetch wildcards] have done ! ")
 
 
 def main():
     with open("./conf/hosts_repository_config.json", 'r') as d:
-        repoConfig = json.load(d)
+        repo = json.load(d)
     allHosts = {}
 
-    for type in repoConfig:
+    for type in repo:
         if type == "hosts":
-            for url in repoConfig[type].values():
-                hosts = getHosts(url)
+            for url in repo[type].values():
+                hosts = fetchHosts(url)
                 allHosts.update(hosts)
-        elif type == "wrcd":
-            getWildcardsrcd(repoConfig[type])
-    updateLocalHosts(allHosts)
+        elif type == "wildcards":
+            fetchAndSaveWildcards(repo[type])
+    saveHosts(allHosts)
     print("Congratulations! All updates completed.")
 
 

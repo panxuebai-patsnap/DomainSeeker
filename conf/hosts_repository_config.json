@@ -4,5 +4,5 @@
 		"yhosts":"https://raw.githubusercontent.com/vokins/yhosts/master/hosts",
 		"adaway":"https://raw.githubusercontent.com/aoccin/adaway/master/hosts"
 	},
-	"wrcd":"https://raw.githubusercontent.com/harrisonpan/DomainSeeker/master/data/wrcd.json"
+	"wildcards":"https://raw.githubusercontent.com/harrisonpan/DomainSeeker/master/data/wildcards.json"
 }

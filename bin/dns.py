@@ -1,14 +1,13 @@
 # -*- coding:utf-8 -*-
 import dnslib.dnsfucation as dns
-import socket, sys
+import socket
 import threading
 import json
-import base64
 import logging
 
 logging.basicConfig(level=logging.INFO)
-dict_data = {}
-dict_config = {}
+hosts = {}
+config = {}
 remote_dns_server = '114.114.114.114'
 remote_dns_port = 53
 local_dns_server = '127.0.0.1'
@@ -16,30 +15,30 @@ local_dns_port = 53
 
 
 def init():
-    global dict_data
-    global dict_config
+    global hosts
+    global config
     global remote_dns_server
     global remote_dns_port
     global local_dns_server
     global local_dns_port
     with open("./conf/config.json", 'r') as d:
-        dict_config = json.load(d)
+        config = json.load(d)
 
-    with open(dict_config['rpz_json_path'], 'r') as c:
-        dict_data = json.load(c)
+    with open(config['rpz_json_path'], 'r') as c:
+        hosts = json.load(c)
 
-    with open("./data/wrcd.json", 'r') as f:
-        dict_wdata = json.load(f)
+    with open("./data/wildcards.json", 'r') as f:
+        wildcards = json.load(f)
 
-    if dict_config['sni_proxy_on']:
-        for key in dict_wdata:
-            dict_wdata[key] = dict_config['sni_proxy_ip']
-    dict_data.update(dict_wdata)
+    if config['sni_proxy_on']:
+        for key in wildcards:
+            wildcards[key] = config['sni_proxy_ip']
+    hosts.update(wildcards)
 
-    remote_dns_server = dict_config['remote_dns_server']
-    remote_dns_port = dict_config['remote_dns_port']
-    local_dns_server = dict_config['local_dns_server']
-    local_dns_port = dict_config['local_dns_port']
+    remote_dns_server = config['remote_dns_server']
+    remote_dns_port = config['remote_dns_port']
+    local_dns_server = config['local_dns_server']
+    local_dns_port = config['local_dns_port']
 
     logging.info("==========Config===========")
     logging.info("local_dns_server:%s", local_dns_server)
@@ -52,8 +51,8 @@ def init():
 def sendDnsData(data, s, addr):
     global remote_dns_server
     global remote_dns_port
-    global dict_data
-    local, data = dns.analysis(data, dict_data)
+    global hosts
+    local, data = dns.analysis(data, hosts)
     if local == 1:
         s.sendto(data, addr)
     else:
