@@ -1,2 +1,3 @@
 *.pyc
 /bin/dnslib/__pycache__/*
+/.idea/*
