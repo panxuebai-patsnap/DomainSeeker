@@ -5,7 +5,7 @@ import json
 
 # get hosts from remote url and wrap the data into dict
 def fetchHosts(url):
-    print("fetching from:" + url)
+    print("fetching hosts from:" + url)
     ips = []
     domains = []
     data = urllib2.urlopen(url).read()
@@ -32,7 +32,7 @@ def saveHosts(hosts):
 
 # update wildcards from remote url
 def fetchAndSaveWildcards(url):
-    print("starting [fetch wildcards]...")
+    print("fetch wildcards from:" + url)
     data = urllib2.urlopen(url).read()
     with open("./data/wildcards.json", 'w') as f:
         f.write(data)
